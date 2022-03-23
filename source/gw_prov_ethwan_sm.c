@@ -1846,8 +1846,8 @@ static void GWP_CreateTFTPServerForCMConsoleLogs()
  	char cmd[BUF_SIZE]; 
  	if (!tftpserverStarted)
  	{	
-	 	//snprintf(cmd,sizeof(cmd), "/usr/bin/udpsvd -E %s 69 /usr/sbin/tftpd -c /var/tftpboot &", EROUTER_PRIV_NET(40));
-          	snprintf(cmd,sizeof(cmd), "/usr/bin/udpsvd -E %s 69 /usr/sbin/tftpd -c /var/tftpboot &","172.31.255.40");
+		//snprintf(cmd,sizeof(cmd), "/usr/bin/udpsvd -E %s 69 /usr/sbin/tftpd -c /var/tmp &", EROUTER_PRIV_NET(40));
+		snprintf(cmd,sizeof(cmd), "/usr/bin/udpsvd -E %s 69 /usr/sbin/tftpd -c /var/tmp &","172.31.255.40");
 		if (system(cmd) == -1)
 			fprintf(stderr,"%s failed\n", cmd);
 		else
