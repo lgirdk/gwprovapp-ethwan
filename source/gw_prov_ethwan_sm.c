@@ -831,16 +831,9 @@ static void GWPEthWan_EnterBridgeMode(void)
     GWPROVETHWANLOG(" Entry %s \n", __FUNCTION__);
     syscfg_get(NULL, "MoCA_current_status", MocaStatus, sizeof(MocaStatus));
     GWPROVETHWANLOG(" MoCA_current_status = %s \n", MocaStatus);
-    if ((syscfg_set(NULL, "MoCA_previous_status", MocaStatus) != 0)) 
+    if ((syscfg_set_commit(NULL, "MoCA_previous_status", MocaStatus) != 0)) 
     {
         printf("syscfg_set failed\n");
-    }
-    else 
-    {
-        if (syscfg_commit() != 0) 
-        {
-            printf("syscfg_commit failed\n");
-        }
     }
     system("ccsp_bus_client_tool eRT setv Device.MoCA.Interface.1.Enable bool false");
     char command[256] = {0};
@@ -1513,17 +1506,9 @@ static int GWP_act_ProvEntry_callback()
 
         #if defined (_BRIDGE_UTILS_BIN_)
 
-            if ( syscfg_set( NULL, "eth_wan_iface_name", ethwan_ifname ) != 0 )
+            if ( syscfg_set_commit( NULL, "eth_wan_iface_name", ethwan_ifname ) != 0 )
             {
                 GWPROVETHWANLOG( "syscfg_set failed for eth_wan_iface_name\n" );
-            }
-            else
-            {
-                if ( syscfg_commit() != 0 )
-                {
-                    GWPROVETHWANLOG( "syscfg_commit failed for eth_wan_iface_name\n" );
-                }
-
             }
         #endif
             
@@ -1973,22 +1958,19 @@ int main(int argc, char *argv[])
     }
 
     /* Update LAN bridge mac address offset */
-    snprintf(sysevent_cmd, sizeof(sysevent_cmd), "%d", BASE_MAC_BRIDGE_OFFSET);
-    if ((syscfg_set(NULL, BASE_MAC_BRIDGE_OFFSET_SYSCFG_KEY, sysevent_cmd) != 0))
+    if ((syscfg_set_u(NULL, BASE_MAC_BRIDGE_OFFSET_SYSCFG_KEY, BASE_MAC_BRIDGE_OFFSET) != 0))
     {
         fprintf(stderr, "Error in %s: Failed to set %s!\n", __FUNCTION__, BASE_MAC_BRIDGE_OFFSET_SYSCFG_KEY);
     }
 
     /* Update wired LAN interface mac address offset */
-    snprintf(sysevent_cmd, sizeof(sysevent_cmd), "%d", BASE_MAC_LAN_OFFSET);
-    if ((syscfg_set(NULL, BASE_MAC_LAN_OFFSET_SYSCFG_KEY, sysevent_cmd) != 0))
+    if ((syscfg_set_u(NULL, BASE_MAC_LAN_OFFSET_SYSCFG_KEY, BASE_MAC_LAN_OFFSET) != 0))
     {
         fprintf(stderr, "Error in %s: Failed to set %s!\n", __FUNCTION__, BASE_MAC_LAN_OFFSET_SYSCFG_KEY);
     }
 
     /* Update WiFi interface mac address offset */
-    snprintf(sysevent_cmd, sizeof(sysevent_cmd), "%d", BASE_MAC_WLAN_OFFSET);
-    if ((syscfg_set(NULL, BASE_MAC_WLAN_OFFSET_SYSCFG_KEY, sysevent_cmd) != 0))
+    if ((syscfg_set_u(NULL, BASE_MAC_WLAN_OFFSET_SYSCFG_KEY, BASE_MAC_WLAN_OFFSET) != 0))
     {
         fprintf(stderr, "Error in %s: Failed to set %s!\n", __FUNCTION__, BASE_MAC_WLAN_OFFSET_SYSCFG_KEY);
     }
