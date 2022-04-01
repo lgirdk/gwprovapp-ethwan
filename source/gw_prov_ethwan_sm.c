@@ -917,7 +917,9 @@ static void *GWPEthWan_sysevent_handler(void *data)
     async_id_t lan_status_asyncid;
     async_id_t pnm_status_asyncid;
     async_id_t primary_lan_l3net_asyncid;
+#ifdef CONFIG_CISCO_HOME_SECURITY
     async_id_t homesecurity_lan_l3net_asyncid;
+#endif
     async_id_t ntp_time_sync_asyncid;
     async_id_t ping_status_asyncid;
     async_id_t conn_status_asyncid;
@@ -956,8 +958,10 @@ static void *GWPEthWan_sysevent_handler(void *data)
     sysevent_set_options(sysevent_fd, sysevent_token, "primary_lan_l3net", TUPLE_FLAG_EVENT);
     sysevent_setnotification(sysevent_fd, sysevent_token, "primary_lan_l3net",  &primary_lan_l3net_asyncid);
 
+#ifdef CONFIG_CISCO_HOME_SECURITY
     sysevent_set_options(sysevent_fd, sysevent_token, "homesecurity_lan_l3net", TUPLE_FLAG_EVENT);
     sysevent_setnotification(sysevent_fd, sysevent_token, "homesecurity_lan_l3net",  &homesecurity_lan_l3net_asyncid);
+#endif
     /* Route events to start ripd and zebra */
     sysevent_set_options    (sysevent_fd, sysevent_token, "lan-status", TUPLE_FLAG_EVENT);
     sysevent_setnotification(sysevent_fd, sysevent_token, "lan-status",  &lan_status_asyncid);
@@ -1259,12 +1263,14 @@ static void *GWPEthWan_sysevent_handler(void *data)
                  }
                 netids_inited = 1;
             }
+#ifdef CONFIG_CISCO_HOME_SECURITY
             else if (strcmp(name, "homesecurity_lan_l3net") == 0)
             {
                 GWPROVETHWANLOG(" homesecurity_lan_l3net received \n");
 				sysevent_set(sysevent_fd_gs, sysevent_token_gs, "ipv4-up", val, 0);
 
             }
+#endif
             else if (strcmp(name, "tr_" ER_NETDEVNAME "_dhcpv6_client_v6addr") == 0)
 	    {
                 Uint8 v6addr[ NETUTILS_IPv6_GLOBAL_ADDR_LEN / sizeof(Uint8) ];
@@ -1310,9 +1316,11 @@ static void *GWPEthWan_sysevent_handler(void *data)
 #endif
 				        webui_started = 1 ;
 
+#ifdef CONFIG_CISCO_HOME_SECURITY
 				        //Piggy back off the webui start event to signal XHS startup
 				        sysevent_get(sysevent_fd_gs, sysevent_token_gs, "homesecurity_lan_l3net", buf, sizeof(buf));
 				        if (buf[0] != '\0') sysevent_set(sysevent_fd_gs, sysevent_token_gs, "ipv4-up", buf, 0);
+#endif
 
 				    }
 			sysevent_get(sysevent_fd_gs, sysevent_token_gs, "primary_lan_l3net", buf, sizeof(buf));
