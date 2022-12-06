@@ -17,17 +17,15 @@
 # limitations under the License.
 ##########################################################################
 AM_CFLAGS =
-AM_LDFLAGS = -lsysevent
-AM_LDFLAGS += -lsyscfg
-AM_LDFLAGS += -lhal_msomgmt
 AM_CFLAGS += -I$(top_srcdir)/hal/include -I=/usr/include/ccsp
 
-AM_CPPFLAGS = -Wall -Werror
 ACLOCAL_AMFLAGS = -I m4
-hardware_platform = i686-linux-gnu
+
 bin_PROGRAMS = gw_prov_ethwan
-gw_prov_ethwan_CPPFLAGS = -I/var/tmp/pc-rdkb/include $(CPPFLAGS) -I$(srcdir)/include -I$(top_srcdir)/../hal/include
+
+gw_prov_ethwan_CPPFLAGS = -I$(srcdir)/include
 gw_prov_ethwan_SOURCES = gw_prov_ethwan_sm.c autowan.c
+
 if WAN_MANAGER_ENABLED
 gw_prov_ethwan_LDFLAGS = -lsysevent -lsyscfg -lhal_msomgmt -lccsp_common -lhal_ethsw
 else
@@ -40,7 +38,6 @@ gw_prov_ethwan_LDFLAGS = -lsysevent -lsyscfg -lhal_msomgmt -lccsp_common -lhal_e
 else
 gw_prov_ethwan_LDFLAGS = -lgwprovappabs -lsysevent -lsyscfg -lhal_msomgmt -lccsp_common -lhal_ethsw -lhal_platform
 endif
-
 endif
 else
 gw_prov_ethwan_LDFLAGS = -lsysevent -lsyscfg -lhal_msomgmt -lccsp_common -lhal_ethsw
