@@ -1051,7 +1051,7 @@ static void *GWPEthWan_sysevent_handler(void *data)
             {
 		char cmd[100+5];
 		    GWPROVETHWANLOG("received notification event %s\n", name);
-		    sprintf(cmd, "ip6tables -I OUTPUT -o %s -p icmpv6 -j DROP", ethwan_ifname);
+		    snprintf(cmd,sizeof(cmd), "ip6tables -I OUTPUT -o %s -p icmpv6 -j DROP", ethwan_ifname);     //CID:79901
     		    system(cmd);
 		    GWPROVETHWANLOG("cmd %s\n", cmd);
             }
