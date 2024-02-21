@@ -110,6 +110,8 @@ static uint32_t cb_registration_cnt;
 #define ETHWAN_DEF_INTF_NAME "eth3"
 #elif defined (INTEL_PUMA7)
 #define ETHWAN_DEF_INTF_NAME "nsgmii0"
+#elif defined(_SCER11BEL_PRODUCT_REQ_)
+#define ETHWAN_DEF_INTF_NAME "eth4"
 #elif defined(_PLATFORM_TURRIS_)
 #define ETHWAN_DEF_INTF_NAME "eth2"
 #elif defined(_CBR2_PRODUCT_REQ_)
