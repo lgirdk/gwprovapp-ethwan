@@ -819,8 +819,11 @@ static void GWPEthWan_EnterBridgeMode(void)
     /* Reset Switch, to remove all VLANs */ 
     // GSWT_ResetSwitch();
     //DOCSIS_ESAFE_SetEsafeProvisioningStatusProgress(DOCSIS_EROUTER_INTERFACE, ESAFE_PROV_STATE_NOT_INITIATED);
+#if !defined (NO_MOCA_FEATURE_SUPPORT)
     char MocaStatus[16]  = {0};
+#endif
     GWPROVETHWANLOG(" Entry %s \n", __FUNCTION__);
+#if !defined (NO_MOCA_FEATURE_SUPPORT)
     syscfg_get(NULL, "MoCA_current_status", MocaStatus, sizeof(MocaStatus));
     GWPROVETHWANLOG(" MoCA_current_status = %s \n", MocaStatus);
     if ((syscfg_set_commit(NULL, "MoCA_previous_status", MocaStatus) != 0)) 
@@ -828,6 +831,7 @@ static void GWPEthWan_EnterBridgeMode(void)
         printf("syscfg_set failed\n");
     }
     system("dmcli eRT setv Device.MoCA.Interface.1.Enable bool false");
+#endif
     char command[256];
     snprintf(command,sizeof(command),"sysevent set bridge_mode %d",active_mode) ;
     system(command);
@@ -840,15 +844,17 @@ static void GWPEthWan_EnterBridgeMode(void)
 static void GWPEthWan_EnterRouterMode(void)
 {
          /* Coverity Issue Fix - CID:71381 : UnInitialised varible */
+#if !defined (NO_MOCA_FEATURE_SUPPORT)
     char MocaPreviousStatus[16] = {0};
         int prev;
+#endif
     GWPROVETHWANLOG(" Entry %s \n", __FUNCTION__);
 
 //    bridge_mode = 0;
     char command[256];
     snprintf(command,sizeof(command),"sysevent set bridge_mode %d",BRMODE_ROUTER) ;
     system(command);
-
+#if !defined (NO_MOCA_FEATURE_SUPPORT)
     syscfg_get(NULL, "MoCA_previous_status", MocaPreviousStatus, sizeof(MocaPreviousStatus));
     prev = atoi(MocaPreviousStatus);
     GWPROVETHWANLOG(" MocaPreviousStatus = %d \n", prev);
@@ -860,7 +866,7 @@ static void GWPEthWan_EnterRouterMode(void)
     {
         system("dmcli eRT setv Device.MoCA.Interface.1.Enable bool false");
     }
-
+#endif
     system("dmcli eRT setv Device.X_CISCO_COM_DeviceControl.ErouterEnable bool true");
     
     system("sysevent set forwarding-restart");
